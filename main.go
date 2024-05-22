@@ -113,7 +113,7 @@ func CRUDwindow(app fyne.App, tabela int) {
 		case 1:
 			newUpdateAnimalWindow(app)
 		case 2:
-			//newUpdateClienteWindow(app)
+			newUpdateClienteWindow(app)
 		case 3:
 			//newUpdateFuncionarioWindow(app)
 		case 4:
@@ -607,7 +607,7 @@ func newFuncionarioWindow(app fyne.App) {
 }
 
 func newRemovePagamentoWindow(app fyne.App) {
-    window := app.NewWindow("REMOVER PAGAMENTO")
+	window := app.NewWindow("REMOVER PAGAMENTO")
 	window.Resize(fyne.NewSize(400, 300))
 
 	content := container.NewVBox()
@@ -636,7 +636,7 @@ func newRemovePagamentoWindow(app fyne.App) {
 }
 
 func newShowPagamentosWindow(app fyne.App) {
-    window := app.NewWindow("PAGAMENTOS DISPONIVEIS")
+	window := app.NewWindow("PAGAMENTOS DISPONIVEIS")
 	window.Resize(fyne.NewSize(400, 300))
 
 	content := container.NewVBox()
@@ -660,19 +660,19 @@ func newShowPagamentosWindow(app fyne.App) {
 }
 
 func newPagamentoWindow(app fyne.App) {
-    window := app.NewWindow("NOVO PAGAMENTO")
+	window := app.NewWindow("NOVO PAGAMENTO")
 	window.Resize(fyne.NewSize(400, 300))
 
 	content := container.NewVBox()
 
-    content.Add(widget.NewLabel("Escolha o tipo de forma de pagamento:"))
-	
-    tipos_pagamento, err := crud.READTipoPagamento()
+	content.Add(widget.NewLabel("Escolha o tipo de forma de pagamento:"))
+
+	tipos_pagamento, err := crud.READTipoPagamento()
 	if err != nil {
 		panic(err)
 	}
 
-    // crud.CREATEPagamento() // (1,'Dinheiro'),(2,'Cartão'),(3,'Boleto');
+	// crud.CREATEPagamento() // (1,'Dinheiro'),(2,'Cartão'),(3,'Boleto');
 	if len(tipos_pagamento) != 0 {
 		for _, tipo_pagamento := range tipos_pagamento {
 			content.Add(widget.NewButton(tipo_pagamento.Nome, func() {
@@ -692,13 +692,13 @@ func newPagamentoWindow(app fyne.App) {
 }
 
 func newRemoveServicoWindow(app fyne.App) {
-    window := app.NewWindow("REMOVER SERVICO")
+	window := app.NewWindow("REMOVER SERVICO")
 	window.Resize(fyne.NewSize(400, 300))
 
 	content := container.NewVBox()
 
 	servicos, err := crud.READServico()
-	if err != nil { 
+	if err != nil {
 		panic(err)
 	}
 
@@ -721,140 +721,140 @@ func newRemoveServicoWindow(app fyne.App) {
 }
 
 func newServicoWindow(app fyne.App) { // todo: init.sql --> inserir campo preco no servico
-    window := app.NewWindow("NOVO SERVICO")
+	window := app.NewWindow("NOVO SERVICO")
 	window.Resize(fyne.NewSize(400, 300))
 
 	content := container.NewVBox()
 
-    // Funcionario_idFuncionario
-    content.Add(widget.NewLabel("Funcionario a ser designado:"))
+	// Funcionario_idFuncionario
+	content.Add(widget.NewLabel("Funcionario a ser designado:"))
 
-    var funcionarioSelectedID int
-    var funcionariosNomes []string
+	var funcionarioSelectedID int
+	var funcionariosNomes []string
 
-    Funcionarios, err := crud.READFuncionario()
+	Funcionarios, err := crud.READFuncionario()
 	if err != nil {
 		panic(err)
 	}
 
-    for _, funcionario := range Funcionarios {
-        funcionariosNomes = append(funcionariosNomes, funcionario.Nome)
-    }
+	for _, funcionario := range Funcionarios {
+		funcionariosNomes = append(funcionariosNomes, funcionario.Nome)
+	}
 
-    selectEntryFuncionario := widget.NewSelect(funcionariosNomes, func(value string) {
-        for _, funcionario := range Funcionarios {
-            if funcionario.Nome == value {
-                funcionarioSelectedID = funcionario.ID
-            }
-        }
-    })
-    
-    content.Add(selectEntryFuncionario)
+	selectEntryFuncionario := widget.NewSelect(funcionariosNomes, func(value string) {
+		for _, funcionario := range Funcionarios {
+			if funcionario.Nome == value {
+				funcionarioSelectedID = funcionario.ID
+			}
+		}
+	})
 
-    // TipoServico_idTipoServico
-    content.Add(widget.NewLabel("Tipo do serviço:"))
+	content.Add(selectEntryFuncionario)
 
-    var tipoServicoSelectedID int
-    var tiposServicoNomes []string
+	// TipoServico_idTipoServico
+	content.Add(widget.NewLabel("Tipo do serviço:"))
 
-    TiposServico, err := crud.READTipoServico()
+	var tipoServicoSelectedID int
+	var tiposServicoNomes []string
+
+	TiposServico, err := crud.READTipoServico()
 	if err != nil {
 		panic(err)
 	}
 
-    for _, tipo_servico := range TiposServico {
-        tiposServicoNomes = append(tiposServicoNomes, tipo_servico.Nome)
-    }
+	for _, tipo_servico := range TiposServico {
+		tiposServicoNomes = append(tiposServicoNomes, tipo_servico.Nome)
+	}
 
-    selectEntryTipoServico := widget.NewSelect(tiposServicoNomes, func(value string) {
-        for _, tipo_servico := range TiposServico {
-            if tipo_servico.Nome == value {
-                tipoServicoSelectedID = tipo_servico.ID
-            }
-        }
-    })
+	selectEntryTipoServico := widget.NewSelect(tiposServicoNomes, func(value string) {
+		for _, tipo_servico := range TiposServico {
+			if tipo_servico.Nome == value {
+				tipoServicoSelectedID = tipo_servico.ID
+			}
+		}
+	})
 
-    content.Add(selectEntryTipoServico)
+	content.Add(selectEntryTipoServico)
 
-    // Anima_idAnima + Anima_Cliente_idcliente
-    content.Add(widget.NewLabel("Animal correspondente:"))
+	// Anima_idAnima + Anima_Cliente_idcliente
+	content.Add(widget.NewLabel("Animal correspondente:"))
 
-    var animalSelectedID int
-    var clienteSelectedID int
-    var animaisNomes []string
+	var animalSelectedID int
+	var clienteSelectedID int
+	var animaisNomes []string
 
-    Animais, err := crud.READAnimal()
+	Animais, err := crud.READAnimal()
 	if err != nil {
 		panic(err)
 	}
 
-    for _, animal := range Animais {
-        animaisNomes = append(animaisNomes, animal.Nome)
-    }
+	for _, animal := range Animais {
+		animaisNomes = append(animaisNomes, animal.Nome)
+	}
 
-    selectEntryAnimal := widget.NewSelect(animaisNomes, func(value string) {
-        for _, animal := range Animais {
-            if animal.Nome == value {
-                animalSelectedID = animal.ID
-                clienteSelectedID = animal.Cliente
-            }
-        }
-    })
+	selectEntryAnimal := widget.NewSelect(animaisNomes, func(value string) {
+		for _, animal := range Animais {
+			if animal.Nome == value {
+				animalSelectedID = animal.ID
+				clienteSelectedID = animal.Cliente
+			}
+		}
+	})
 
-    content.Add(selectEntryAnimal)
+	content.Add(selectEntryAnimal)
 
-    // Produto_idProduto
-    content.Add(widget.NewLabel("Produto:"))
+	// Produto_idProduto
+	content.Add(widget.NewLabel("Produto:"))
 
-    var produtoSelectedID int
-    var produtoNomes []string
+	var produtoSelectedID int
+	var produtoNomes []string
 
-    Produtos, err := crud.READProduto()
+	Produtos, err := crud.READProduto()
 	if err != nil {
 		panic(err)
 	}
 
-    for _, produto := range Produtos {
-        produtoNomes = append(produtoNomes, produto.Nome)
-    }
+	for _, produto := range Produtos {
+		produtoNomes = append(produtoNomes, produto.Nome)
+	}
 
-    selectEntryProduto := widget.NewSelect(produtoNomes, func(value string) {
-        for _, produto := range Produtos {
-            if produto.Nome == value {
-                produtoSelectedID = produto.ID
-            }
-        }
-    })
+	selectEntryProduto := widget.NewSelect(produtoNomes, func(value string) {
+		for _, produto := range Produtos {
+			if produto.Nome == value {
+				produtoSelectedID = produto.ID
+			}
+		}
+	})
 
-    content.Add(selectEntryProduto)
+	content.Add(selectEntryProduto)
 
-    // Pagamento_idFormaPagamento
-    content.Add(widget.NewLabel("Forma de pagamento:"))
+	// Pagamento_idFormaPagamento
+	content.Add(widget.NewLabel("Forma de pagamento:"))
 
-    var pagamentoSelectedID int
-    var tiposPagamentoNomes []string
+	var pagamentoSelectedID int
+	var tiposPagamentoNomes []string
 
-    TiposPagamento, err := crud.READTipoPagamento()
+	TiposPagamento, err := crud.READTipoPagamento()
 	if err != nil {
 		panic(err)
 	}
 
-    for _, tipo_pagamento := range TiposPagamento {
-       tiposPagamentoNomes = append(tiposPagamentoNomes, tipo_pagamento.Nome)
-    }
+	for _, tipo_pagamento := range TiposPagamento {
+		tiposPagamentoNomes = append(tiposPagamentoNomes, tipo_pagamento.Nome)
+	}
 
-    selectEntryTipoPagamento := widget.NewSelect(tiposPagamentoNomes, func(value string) {
-        for _, tipo_pagamento := range TiposPagamento {
-            if tipo_pagamento.Nome == value {
-                pagamentoSelectedID = tipo_pagamento.ID
-            }
-        }
-    })
+	selectEntryTipoPagamento := widget.NewSelect(tiposPagamentoNomes, func(value string) {
+		for _, tipo_pagamento := range TiposPagamento {
+			if tipo_pagamento.Nome == value {
+				pagamentoSelectedID = tipo_pagamento.ID
+			}
+		}
+	})
 
-    content.Add(selectEntryTipoPagamento)
+	content.Add(selectEntryTipoPagamento)
 
-    content.Add(widget.NewButton("Enter", func() {
-        crud.CREATEServico(funcionarioSelectedID, tipoServicoSelectedID, animalSelectedID, clienteSelectedID, produtoSelectedID, pagamentoSelectedID)
+	content.Add(widget.NewButton("Enter", func() {
+		crud.CREATEServico(funcionarioSelectedID, tipoServicoSelectedID, animalSelectedID, clienteSelectedID, produtoSelectedID, pagamentoSelectedID)
 		window.Close()
 	}))
 
@@ -868,7 +868,7 @@ func newServicoWindow(app fyne.App) { // todo: init.sql --> inserir campo preco 
 }
 
 func newShowServicosWindow(app fyne.App) {
-    window := app.NewWindow("SERVICOS REALIZADOS")
+	window := app.NewWindow("SERVICOS REALIZADOS")
 	window.Resize(fyne.NewSize(400, 300))
 
 	content := container.NewVBox()
@@ -879,13 +879,78 @@ func newShowServicosWindow(app fyne.App) {
 		content.Add(widget.NewLabel("ID: " + strconv.Itoa(servico.ID)))
 		content.Add(widget.NewLabel("Funcionario: " + strconv.Itoa(servico.IDFuncionario)))
 		content.Add(widget.NewLabel("Data: " + servico.Data))
-        content.Add(widget.NewLabel("Tipo de serviço: " + strconv.Itoa(servico.Tipo)))
-        content.Add(widget.NewLabel("Animal: " + strconv.Itoa(servico.IDAnimal)))
-        content.Add(widget.NewLabel("ID do Cliente: " + strconv.Itoa(servico.IDClienteAnimal)))
-        content.Add(widget.NewLabel("ID do Produto: " + strconv.Itoa(servico.IDProduto)))
-        content.Add(widget.NewLabel("ID Forma de pagamento: " + strconv.Itoa(servico.IDFormaPagamento)))
+		content.Add(widget.NewLabel("Tipo de serviço: " + strconv.Itoa(servico.Tipo)))
+		content.Add(widget.NewLabel("Animal: " + strconv.Itoa(servico.IDAnimal)))
+		content.Add(widget.NewLabel("ID do Cliente: " + strconv.Itoa(servico.IDClienteAnimal)))
+		content.Add(widget.NewLabel("ID do Produto: " + strconv.Itoa(servico.IDProduto)))
+		content.Add(widget.NewLabel("ID Forma de pagamento: " + strconv.Itoa(servico.IDFormaPagamento)))
 		content.Add(widget.NewLabel("___________________________________"))
 	}
+
+	content.Add(widget.NewButton("Voltar", func() {
+		window.Close()
+	}))
+
+	window.SetContent(content)
+
+	window.Show()
+}
+
+func newUpdateClienteWindow(app fyne.App) {
+	window := app.NewWindow("CLIENTES DISPONÍVEIS")
+	window.Resize(fyne.NewSize(400, 300))
+
+	content := container.NewVBox()
+
+	clientes, err := crud.READCliente()
+	if err != nil {
+		panic(err)
+	}
+
+	for _, cliente := range clientes {
+		content.Add(widget.NewButton(cliente.Nome, func() {
+			newUpdateClienteInputWindow(app, cliente.ID)
+		}))
+	}
+
+	content.Add(widget.NewButton("Voltar", func() {
+		window.Close()
+	}))
+
+	window.SetContent(content)
+
+	window.Show()
+}
+
+func newUpdateClienteInputWindow(app fyne.App, id int) {
+	window := app.NewWindow("CAMPOS A SEREM MODIFICADOS")
+	window.Resize(fyne.NewSize(400, 300))
+
+	content := container.NewVBox()
+
+	nomeEntry := widget.NewEntry()
+	cpfEntry := widget.NewEntry()
+
+	content.Add(widget.NewLabel("Insira os novos dados do cliente:"))
+
+	content.Add(widget.NewLabel("Nome:"))
+	content.Add(nomeEntry)
+
+	content.Add(widget.NewLabel("CPF:"))
+	content.Add(cpfEntry)
+
+	content.Add(widget.NewButton("Enter", func() {
+		if cpfEntry.Text == "" {
+			crud.UPDATECliente(id, "nome", nomeEntry.Text)
+		} else if nomeEntry.Text == "" {
+			crud.UPDATECliente(id, "cpf", cpfEntry.Text)
+		} else {
+			crud.UPDATECliente(id, "nome", nomeEntry.Text)
+			crud.UPDATECliente(id, "cpf", cpfEntry.Text)
+		}
+		
+		window.Close()
+	}))
 
 	content.Add(widget.NewButton("Voltar", func() {
 		window.Close()

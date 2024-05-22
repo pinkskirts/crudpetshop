@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"log"
 
-	//"strings"
 	"strconv"
 	"time"
 
@@ -557,6 +556,26 @@ func UPDATEAnimal(id int, attribute string, value string) error {
 		_, err := db.Exec("UPDATE Animal SET cliente_idcliente = ? WHERE idAnimal = ?", value, int64(id))
 		if err != nil {
 			return fmt.Errorf("updateAnimal: %v", err)
+		}
+	}
+
+	return nil
+}
+
+func UPDATECliente(id int, attribute string, value string) error {
+	var db *sql.DB = DB.DbRef
+	checkNullDb()
+
+	switch attribute {
+	case "nome":
+		_, err := db.Exec("UPDATE Cliente SET nome = ? WHERE idcliente = ?", value, int64(id))
+		if err != nil {
+			return fmt.Errorf("updateCliente: %v", err)
+		}
+	case "cpf":
+		_, err := db.Exec("UPDATE Cliente SET cpf = ? WHERE idcliente = ?", value, int64(id))
+		if err != nil {
+			return fmt.Errorf("updateCliente: %v", err)
 		}
 	}
 
