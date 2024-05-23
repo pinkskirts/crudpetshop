@@ -14,11 +14,6 @@ import (
 	"crudpetshop/crud"
 )
 
-func isValidInteger(s string) bool {
-	_, err := strconv.Atoi(s)
-	return err == nil
-}
-
 func main() {
 	// Connects to DB so its reference can be used in CRUD menu
 	_, err := DB.Init()
@@ -29,10 +24,62 @@ func main() {
 	// Cria uma nova aplicação Fyne
 	petshopApp := app.New()
 
-	window := petshopApp.NewWindow("TABELAS")
+	window := petshopApp.NewWindow("LOGIN")
 	window.Resize(fyne.NewSize(400, 300))
 
-	// Chamar a função showTables para listar as tabelas
+	content := container.NewVBox()
+
+	loginEntry := widget.NewEntry()
+	senhaEntry := widget.NewEntry()
+
+	content.Add(widget.NewLabel("Entre com seu login e senha:"))
+	content.Add(widget.NewLabel("Login:"))
+	content.Add(loginEntry)
+
+	content.Add(widget.NewLabel("Senha:"))
+	content.Add(senhaEntry)
+
+	errorMessage := widget.NewLabel("")
+	
+	content.Add(errorMessage)
+
+	content.Add(widget.NewButton("Enter", func() {
+		// checar login e senha no bd
+		if !queryUser(loginEntry.Text, senhaEntry.Text) {
+			errorMessage.SetText("Usuário não encontrado.")
+		} else {
+			errorMessage.SetText("")
+			newTablesWindow(petshopApp)
+		}
+	}))
+
+	content.Add(widget.NewButton("Sair", func() {
+		petshopApp.Quit()
+	}))
+
+	window.SetContent(content)
+	window.ShowAndRun()
+}
+
+func queryUser(login string, senha string) bool {
+	Usuarios, err := crud.READUsuario()
+	if err != nil {
+		panic(err)
+	}
+
+	for _, usuario := range Usuarios {
+		if usuario.Login == login && usuario.Senha == senha {
+			return true // Usuário encontrado
+		}
+	}
+
+	return false
+}
+
+func newTablesWindow(app fyne.App) {
+	window := app.NewWindow("TABELAS")
+	window.Resize(fyne.NewSize(400, 300))
+
 	tables, err := crud.ShowTables()
 	if err != nil {
 		panic(err)
@@ -43,36 +90,34 @@ func main() {
 	content.Add(widget.NewLabel("Tabelas disponiveis:"))
 
 	for _, table := range tables {
-		if table != "Raca" && table != "Produto" && table != "TipoPagamento" && table != "TipoServico" && table != "Porte" {
+		if table != "Raca" && table != "Produto" && table != "TipoPagamento" && table != "TipoServico" && table != "Porte" && table != "Usuario" {
 			content.Add(widget.NewButton(table, func() {
 				switch table {
 				case "Animal":
-					CRUDwindow(petshopApp, 1)
+					newCRUDwindow(app, 1)
 				case "Cliente":
-					CRUDwindow(petshopApp, 2)
+					newCRUDwindow(app, 2)
 				case "Funcionario":
-					CRUDwindow(petshopApp, 3)
+					newCRUDwindow(app, 3)
 				case "Pagamento":
-					CRUDwindow(petshopApp, 4)
+					newCRUDwindow(app, 4)
 				case "Servico":
-					CRUDwindow(petshopApp, 5)
+					newCRUDwindow(app, 5)
 				}
 			}))
 		}
 
 	}
 
-	content.Add(widget.NewButton("Sair", func() {
-		petshopApp.Quit()
+	content.Add(widget.NewButton("Voltar", func() {
+		window.Close()
 	}))
 
 	window.SetContent(content)
-
-	// Mostra a janela e inicia a aplicação
-	window.ShowAndRun()
+	window.Show()
 }
 
-func CRUDwindow(app fyne.App, tabela int) {
+func newCRUDwindow(app fyne.App, tabela int) {
 	// Cria uma nova janela
 	window := app.NewWindow("CRUD Petshop")
 	window.Resize(fyne.NewSize(400, 200))

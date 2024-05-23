@@ -71,6 +71,12 @@ type Produto struct {
 	Preco float64 // preço
 }
 
+type Usuario struct {
+	ID    int    // idUsuario
+	Login string // login
+	Senha string // senha
+}
+
 const timeLayout string = "2006-01-02"
 
 // OTHER METHODS
@@ -523,6 +529,36 @@ func READProduto() ([]Produto, error) {
 	}
 
 	return Produtos, nil
+}
+
+func READUsuario() ([]Usuario, error) {
+	var db *sql.DB = DB.DbRef
+	checkNullDb()
+
+	var Usuarios []Usuario
+
+	rows, err := db.Query("SELECT * FROM Usuario")
+	if err != nil {
+		return nil, fmt.Errorf("readUsuario: %w", err)
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var usuario Usuario
+
+		if err := rows.Scan(&usuario.ID, &usuario.Login, &usuario.Senha); err != nil {
+			return nil, fmt.Errorf("%w", err)
+		}
+
+		Usuarios = append(Usuarios, usuario)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("readUsuario: %w", err)
+	}
+
+	return Usuarios, nil
 }
 
 // UPDATE METHODS
