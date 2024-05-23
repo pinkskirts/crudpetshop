@@ -66,8 +66,8 @@ type TipoServico struct {
 }
 
 type Produto struct {
-	ID    int    // idProduto
-	Nome  string // nome
+	ID    int     // idProduto
+	Nome  string  // nome
 	Preco float64 // preço
 }
 
@@ -581,6 +581,28 @@ func UPDATECliente(id int, attribute string, value string) error {
 
 	return nil
 }
+
+func UPDATEFuncionario(id int, attribute string, value string) error {
+	var db *sql.DB = DB.DbRef
+	checkNullDb()
+
+	switch attribute {
+	case "nome":
+		_, err := db.Exec("UPDATE Funcionario SET nome = ? WHERE idFuncionario = ?", value, int64(id))
+		if err != nil {
+			return fmt.Errorf("updateFuncionario: %v", err)
+		}
+	case "cpf":
+		_, err := db.Exec("UPDATE Funcionario SET cpf = ? WHERE idFuncionario = ?", value, int64(id))
+		if err != nil {
+			return fmt.Errorf("updateFuncionario: %v", err)
+		}
+	}
+
+	fmt.Println("Funcionario updated!")
+	return nil
+}
+
 
 // DELETE METHOD
 
