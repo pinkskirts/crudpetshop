@@ -115,7 +115,7 @@ func CRUDwindow(app fyne.App, tabela int) {
 		case 2:
 			newUpdateClienteWindow(app)
 		case 3:
-			//newUpdateFuncionarioWindow(app)
+			newUpdateFuncionarioWindow(app)
 		case 4:
 			//newUpdatePagamentoWindow(app)
 		case 5:
@@ -947,6 +947,71 @@ func newUpdateClienteInputWindow(app fyne.App, id int) {
 		} else {
 			crud.UPDATECliente(id, "nome", nomeEntry.Text)
 			crud.UPDATECliente(id, "cpf", cpfEntry.Text)
+		}
+		
+		window.Close()
+	}))
+
+	content.Add(widget.NewButton("Voltar", func() {
+		window.Close()
+	}))
+
+	window.SetContent(content)
+
+	window.Show()
+}
+
+func newUpdateFuncionarioWindow(app fyne.App) {
+	window := app.NewWindow("FUNCIONARIOS DISPONÍVEIS")
+	window.Resize(fyne.NewSize(400, 300))
+
+	content := container.NewVBox()
+
+	funcionarios, err := crud.READFuncionario()
+	if err != nil {
+		panic(err)
+	}
+
+	for _, funcionario := range funcionarios {
+		content.Add(widget.NewButton(funcionario.Nome, func() {
+			newUpdateFuncionarioInputWindow(app, funcionario.ID)
+		}))
+	}
+
+	content.Add(widget.NewButton("Voltar", func() {
+		window.Close()
+	}))
+
+	window.SetContent(content)
+
+	window.Show()
+}
+
+func newUpdateFuncionarioInputWindow(app fyne.App, id int) {
+	window := app.NewWindow("CAMPOS A SEREM MODIFICADOS")
+	window.Resize(fyne.NewSize(400, 300))
+
+	content := container.NewVBox()
+
+	nomeEntry := widget.NewEntry()
+	cpfEntry := widget.NewEntry()
+
+	content.Add(widget.NewLabel("Insira os novos dados do funcionario:"))
+
+	content.Add(widget.NewLabel("Nome:"))
+	content.Add(nomeEntry)
+
+	content.Add(widget.NewLabel("CPF:"))
+	content.Add(cpfEntry)
+
+	content.Add(widget.NewButton("Enter", func() {
+		if cpfEntry.Text == "" {
+			crud.UPDATEFuncionario(id, "nome", nomeEntry.Text)
+		} else if nomeEntry.Text == "" {
+			crud.UPDATEFuncionario(id, "cpf", cpfEntry.Text)
+		} else {
+			crud.UPDATEFuncionario(id, "nome", nomeEntry.Text)
+			crud.UPDATEFuncionario(id, "cpf", cpfEntry.Text)
 		}
 		
 		window.Close()
