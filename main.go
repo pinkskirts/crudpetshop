@@ -117,7 +117,7 @@ func CRUDwindow(app fyne.App, tabela int) {
 		case 3:
 			newUpdateFuncionarioWindow(app)
 		case 4:
-			//newUpdatePagamentoWindow(app)
+			newUpdatePagamentoWindow(app)
 		case 5:
 			//newUpdateServicoWindow(app)
 		}
@@ -1025,3 +1025,75 @@ func newUpdateFuncionarioInputWindow(app fyne.App, id int) {
 
 	window.Show()
 }
+
+func newUpdatePagamentoWindow(app fyne.App) {
+	window := app.NewWindow("PAGAMENTOS DISPONÍVEIS")
+	window.Resize(fyne.NewSize(400, 300))
+
+	content := container.NewVBox()
+
+	pagamentos, err := crud.READPagamento()
+	if err != nil {
+		panic(err)
+	}
+
+	for _, pagamento := range pagamentos {
+		content.Add(widget.NewButton(pagamento.Data, func() {
+			newUpdatePagamentoInputWindow(app, pagamento.ID)
+		}))
+	}
+
+	content.Add(widget.NewButton("Voltar", func() {
+		window.Close()
+	}))
+
+	window.SetContent(content)
+
+	window.Show()
+}
+
+func newUpdatePagamentoInputWindow(app fyne.App, id int) {
+	window := app.NewWindow("CAMPOS A SEREM MODIFICADOS")
+	window.Resize(fyne.NewSize(400, 300))
+
+	content := container.NewVBox()
+
+	// Pagamento_idFormaPagamento
+	content.Add(widget.NewLabel("Forma de pagamento:"))
+
+	var tipo_pagamentoSelectedID int
+	var tiposPagamentoNomes []string
+
+	TiposPagamento, err := crud.READTipoPagamento()
+	if err != nil {
+		panic(err)
+	}
+
+	for _, tipo_pagamento := range TiposPagamento {
+		tiposPagamentoNomes = append(tiposPagamentoNomes, tipo_pagamento.Nome)
+	}
+
+	selectEntryTipoPagamento := widget.NewSelect(tiposPagamentoNomes, func(value string) {
+		for _, tipo_pagamento := range TiposPagamento {
+			if tipo_pagamento.Nome == value {
+				tipo_pagamentoSelectedID = tipo_pagamento.ID
+			}
+		}
+	})
+
+	content.Add(selectEntryTipoPagamento)
+
+	content.Add(widget.NewButton("Enter", func() {
+		crud.UPDATEPagamento(id, "TipoPagamento_idTipoPagamento", strconv.Itoa(tipo_pagamentoSelectedID))
+		window.Close()
+	}))
+
+	content.Add(widget.NewButton("Voltar", func() {
+		window.Close()
+	}))
+
+	window.SetContent(content)
+
+	window.Show()
+}
+

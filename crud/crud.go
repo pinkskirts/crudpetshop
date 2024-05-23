@@ -603,6 +603,18 @@ func UPDATEFuncionario(id int, attribute string, value string) error {
 	return nil
 }
 
+func UPDATEPagamento(id int, attribute string, value string) error {
+	var db *sql.DB = DB.DbRef
+	checkNullDb()
+
+	_, err := db.Exec("UPDATE Pagamento SET TipoPagamento_idTipoPagamento = ? WHERE idFormaPagamento = ?", value, int64(id))
+	if err != nil {
+		return fmt.Errorf("updatePagamento: %v", err)
+	}
+
+	fmt.Println("Pagamento updated!")
+	return nil
+}
 
 // DELETE METHOD
 
