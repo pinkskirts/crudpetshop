@@ -652,6 +652,22 @@ func UPDATEPagamento(id int, attribute string, value string) error {
 	return nil
 }
 
+func UPDATEServico(id int, id_attribute string, value int) error {
+	var db *sql.DB = DB.DbRef
+	checkNullDb()
+
+	fmt.Printf("Updating Servico: SET %s = %d WHERE idServico = %d\n", id_attribute, value, id)
+
+	query := fmt.Sprintf("UPDATE Servico SET %s = ? WHERE idServico = ?", id_attribute)
+	_, err := db.Exec(query, value, id)
+	if err != nil {
+		return fmt.Errorf("updateServico: %v", err)
+	}
+
+	fmt.Println("Servico updated!")
+	return nil
+}
+
 // DELETE METHOD
 
 func DELETERowByID(table string, id_attribute string, id int) error {

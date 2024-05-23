@@ -164,7 +164,7 @@ func newCRUDwindow(app fyne.App, tabela int) {
 		case 4:
 			newUpdatePagamentoWindow(app)
 		case 5:
-			//newUpdateServicoWindow(app)
+			newUpdateServicoWindow(app)
 		}
 	})
 
@@ -993,7 +993,7 @@ func newUpdateClienteInputWindow(app fyne.App, id int) {
 			crud.UPDATECliente(id, "nome", nomeEntry.Text)
 			crud.UPDATECliente(id, "cpf", cpfEntry.Text)
 		}
-		
+
 		window.Close()
 	}))
 
@@ -1058,7 +1058,7 @@ func newUpdateFuncionarioInputWindow(app fyne.App, id int) {
 			crud.UPDATEFuncionario(id, "nome", nomeEntry.Text)
 			crud.UPDATEFuncionario(id, "cpf", cpfEntry.Text)
 		}
-		
+
 		window.Close()
 	}))
 
@@ -1142,3 +1142,200 @@ func newUpdatePagamentoInputWindow(app fyne.App, id int) {
 	window.Show()
 }
 
+func newUpdateServicoWindow(app fyne.App) {
+	window := app.NewWindow("SERVICOS DISPONÍVEIS")
+	window.Resize(fyne.NewSize(400, 300))
+
+	content := container.NewVBox()
+
+	servicos, err := crud.READServico()
+	if err != nil {
+		panic(err)
+	}
+
+	for _, servico := range servicos {
+		content.Add(widget.NewButton(strconv.Itoa(servico.ID), func() {
+			newUpdateServicoInputWindow(app, servico.ID)
+		}))
+	}
+
+	content.Add(widget.NewButton("Voltar", func() {
+		window.Close()
+	}))
+
+	window.SetContent(content)
+
+	window.Show()
+}
+
+func newUpdateServicoInputWindow(app fyne.App, id int) {
+	window := app.NewWindow("CAMPOS A SEREM MODIFICADOS")
+	window.Resize(fyne.NewSize(400, 300))
+
+	content := container.NewVBox()
+
+	// Funcionario_idFuncionario
+	content.Add(widget.NewLabel("Funcionario a ser designado:"))
+
+	var funcionarioSelectedID int
+	var funcionariosNomes []string
+	funcionarioRadio := widget.NewRadioGroup([]string{"Modificar Funcionario"}, nil)
+
+	Funcionarios, err := crud.READFuncionario()
+	if err != nil {
+		panic(err)
+	}
+
+	for _, funcionario := range Funcionarios {
+		funcionariosNomes = append(funcionariosNomes, funcionario.Nome)
+	}
+
+	selectEntryFuncionario := widget.NewSelect(funcionariosNomes, func(value string) {
+		for _, funcionario := range Funcionarios {
+			if funcionario.Nome == value {
+				funcionarioSelectedID = funcionario.ID
+			}
+		}
+	})
+
+	content.Add(funcionarioRadio)
+	content.Add(selectEntryFuncionario)
+
+	// TipoServico_idTipoServico
+	content.Add(widget.NewLabel("Tipo do serviço:"))
+
+	var tipoServicoSelectedID int
+	var tiposServicoNomes []string
+	tipoServicoRadio := widget.NewRadioGroup([]string{"Modificar Tipo do Serviço"}, nil)
+
+	TiposServico, err := crud.READTipoServico()
+	if err != nil {
+		panic(err)
+	}
+
+	for _, tipo_servico := range TiposServico {
+		tiposServicoNomes = append(tiposServicoNomes, tipo_servico.Nome)
+	}
+
+	selectEntryTipoServico := widget.NewSelect(tiposServicoNomes, func(value string) {
+		for _, tipo_servico := range TiposServico {
+			if tipo_servico.Nome == value {
+				tipoServicoSelectedID = tipo_servico.ID
+			}
+		}
+	})
+
+	content.Add(tipoServicoRadio)
+	content.Add(selectEntryTipoServico)
+
+	// Anima_idAnima + Anima_Cliente_idcliente
+	content.Add(widget.NewLabel("Animal correspondente:"))
+
+	var animalSelectedID int
+	var clienteSelectedID int
+	var animaisNomes []string
+	animalRadio := widget.NewRadioGroup([]string{"Modificar Animal"}, nil)
+
+	Animais, err := crud.READAnimal()
+	if err != nil {
+		panic(err)
+	}
+
+	for _, animal := range Animais {
+		animaisNomes = append(animaisNomes, animal.Nome)
+	}
+
+	selectEntryAnimal := widget.NewSelect(animaisNomes, func(value string) {
+		for _, animal := range Animais {
+			if animal.Nome == value {
+				animalSelectedID = animal.ID
+				clienteSelectedID = animal.Cliente
+			}
+		}
+	})
+
+	content.Add(animalRadio)
+	content.Add(selectEntryAnimal)
+
+	// Produto_idProduto
+	content.Add(widget.NewLabel("Produto:"))
+
+	var produtoSelectedID int
+	var produtoNomes []string
+	produtoRadio := widget.NewRadioGroup([]string{"Modificar Produto"}, nil)
+
+	Produtos, err := crud.READProduto()
+	if err != nil {
+		panic(err)
+	}
+
+	for _, produto := range Produtos {
+		produtoNomes = append(produtoNomes, produto.Nome)
+	}
+
+	selectEntryProduto := widget.NewSelect(produtoNomes, func(value string) {
+		for _, produto := range Produtos {
+			if produto.Nome == value {
+				produtoSelectedID = produto.ID
+			}
+		}
+	})
+
+	content.Add(produtoRadio)
+	content.Add(selectEntryProduto)
+
+	// Pagamento_idFormaPagamento
+	content.Add(widget.NewLabel("Forma de pagamento:"))
+
+	var pagamentoSelectedID int
+	var tiposPagamentoNomes []string
+	pagamentoRadio := widget.NewRadioGroup([]string{"Modificar Forma de Pagamento"}, nil)
+
+	TiposPagamento, err := crud.READTipoPagamento()
+	if err != nil {
+		panic(err)
+	}
+
+	for _, tipo_pagamento := range TiposPagamento {
+		tiposPagamentoNomes = append(tiposPagamentoNomes, tipo_pagamento.Nome)
+	}
+
+	selectEntryTipoPagamento := widget.NewSelect(tiposPagamentoNomes, func(value string) {
+		for _, tipo_pagamento := range TiposPagamento {
+			if tipo_pagamento.Nome == value {
+				pagamentoSelectedID = tipo_pagamento.ID
+			}
+		}
+	})
+
+	content.Add(pagamentoRadio)
+	content.Add(selectEntryTipoPagamento)
+
+	content.Add(widget.NewButton("Enter", func() {
+		if funcionarioRadio.Selected == "Modificar Funcionario" {
+			crud.UPDATEServico(id, "Funcionario_idFuncionario", funcionarioSelectedID)
+		}
+		if tipoServicoRadio.Selected == "Modificar Tipo do Serviço" {
+			crud.UPDATEServico(id, "TipoServico_idTipoServico", tipoServicoSelectedID)
+		}
+		if animalRadio.Selected == "Modificar Animal" {
+			crud.UPDATEServico(id, "Anima_idAnima", animalSelectedID)
+			crud.UPDATEServico(id, "Anima_cliente_idcliente", clienteSelectedID)
+		}
+		if produtoRadio.Selected == "Modificar Produto" {
+			crud.UPDATEServico(id, "Produto_idProduto", produtoSelectedID)
+		}
+		if pagamentoRadio.Selected == "Modificar Forma de Pagamento" {
+			crud.UPDATEServico(id, "Pagamento_idFormaPagamento", pagamentoSelectedID)
+		}
+
+		window.Close()
+	}))
+
+	content.Add(widget.NewButton("Voltar", func() {
+		window.Close()
+	}))
+
+	window.SetContent(content)
+	window.Show()
+}
