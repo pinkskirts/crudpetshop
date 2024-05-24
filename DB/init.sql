@@ -4,7 +4,7 @@ USE `petshop`;
 --
 -- Host: 192.168.66.102    Database: petshop
 -- ------------------------------------------------------
--- Server version	8.3.0
+-- Server version 8.3.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -31,12 +31,12 @@ CREATE TABLE `Animal` (
   `Raca_idRaca` int NOT NULL,
   `cliente_idcliente` int NOT NULL,
   PRIMARY KEY (`idAnimal`,`cliente_idcliente`),
-  KEY `fk_Anima_Porte_idx` (`Porte_idPorte`),
-  KEY `fk_Anima_Raca1_idx` (`Raca_idRaca`),
-  KEY `fk_Anima_cliente1_idx` (`cliente_idcliente`),
-  CONSTRAINT `fk_Anima_cliente1` FOREIGN KEY (`cliente_idcliente`) REFERENCES `Cliente` (`idcliente`),
-  CONSTRAINT `fk_Anima_Porte` FOREIGN KEY (`Porte_idPorte`) REFERENCES `Porte` (`idPorte`),
-  CONSTRAINT `fk_Anima_Raca1` FOREIGN KEY (`Raca_idRaca`) REFERENCES `Raca` (`idRaca`)
+  KEY `fk_Animal_Porte_idx` (`Porte_idPorte`),
+  KEY `fk_Animal_Raca1_idx` (`Raca_idRaca`),
+  KEY `fk_Animal_cliente1_idx` (`cliente_idcliente`),
+  CONSTRAINT `fk_Animal_cliente1` FOREIGN KEY (`cliente_idcliente`) REFERENCES `Cliente` (`idcliente`),
+  CONSTRAINT `fk_Animal_Porte` FOREIGN KEY (`Porte_idPorte`) REFERENCES `Porte` (`idPorte`),
+  CONSTRAINT `fk_Animal_Raca1` FOREIGN KEY (`Raca_idRaca`) REFERENCES `Raca` (`idRaca`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -75,7 +75,7 @@ CREATE TABLE `Cliente` (
 LOCK TABLES `Cliente` WRITE;
 /*!40000 ALTER TABLE `Cliente` DISABLE KEYS */;
 INSERT INTO `Cliente` (`nome`, `cpf`) VALUES 
-('João', '123.456.789-00'),
+('Joao', '123.456.789-00'),
 ('Maria', '987.654.321-00'),
 ('Pedro', '111.222.333-44');
 /*!40000 ALTER TABLE `Cliente` ENABLE KEYS */;
@@ -159,7 +159,7 @@ CREATE TABLE `Porte` (
 
 LOCK TABLES `Porte` WRITE;
 /*!40000 ALTER TABLE `Porte` DISABLE KEYS */;
-INSERT INTO `Porte` VALUES (1,'Pequeno'),(2,'Médio'),(3,'Grande');
+INSERT INTO `Porte` VALUES (1,'Pequeno'),(2,'Medio'),(3,'Grande');
 /*!40000 ALTER TABLE `Porte` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -173,7 +173,7 @@ DROP TABLE IF EXISTS `Produto`;
 CREATE TABLE `Produto` (
   `idProduto` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(45) NOT NULL,
-  `preço` float NOT NULL,
+  `preco` float NOT NULL,
   PRIMARY KEY (`idProduto`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -184,7 +184,7 @@ CREATE TABLE `Produto` (
 
 LOCK TABLES `Produto` WRITE;
 /*!40000 ALTER TABLE `Produto` DISABLE KEYS */;
-INSERT INTO `Produto` VALUES (1,'Banho e tosa',100),(2,'Banhho',60),(3,'Bolinha',5),(4,'Cama  50cm x 100cm',70),(5,'Cama  50cm x 50cm',50),(6,'Cama  70cm x 70cm',60),(7,'Shampoo 500ml',18.32),(8,'Shampoo 1000ml',25.5),(9,'Consultas ',80.5);
+INSERT INTO `Produto` VALUES (1,'Banho e tosa',100),(2,'Banho',60),(3,'Bolinha',5),(4,'Cama 50cm x 100cm',70),(5,'Cama 50cm x 50cm',50),(6,'Cama 70cm x 70cm',60),(7,'Shampoo 500ml',18.32),(8,'Shampoo 1000ml',25.5),(9,'Consultas',80.5);
 /*!40000 ALTER TABLE `Produto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -208,7 +208,7 @@ CREATE TABLE `Raca` (
 
 LOCK TABLES `Raca` WRITE;
 /*!40000 ALTER TABLE `Raca` DISABLE KEYS */;
-INSERT INTO `Raca` VALUES (1,'Pastor-alemão'),(2,'Buldogue'),(3,'Labrador retriever'),(4,'Golden retriever'),(5,'Husky siberiano'),(6,'Shih-tzu');
+INSERT INTO `Raca` VALUES (1,'Pastor alemao'),(2,'Buldogue'),(3,'Labrador retriever'),(4,'Golden retriever'),(5,'Husky siberiano'),(6,'Shih-tzu');
 /*!40000 ALTER TABLE `Raca` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -220,7 +220,7 @@ DROP TABLE IF EXISTS `Servico`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Servico` (
-  `idServiço` int NOT NULL AUTO_INCREMENT,
+  `idServico` int NOT NULL AUTO_INCREMENT,
   `Funcionario_idFuncionario` int NOT NULL,
   `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `TipoServico_idTipoServico` int NOT NULL,
@@ -228,17 +228,17 @@ CREATE TABLE `Servico` (
   `Anima_cliente_idcliente` int NOT NULL,
   `Produto_idProduto` int NOT NULL,
   `Pagamento_idFormaPagamento` int NOT NULL,
-  PRIMARY KEY (`idServiço`,`Pagamento_idFormaPagamento`),
-  KEY `fk_Serviço_Funcionario1_idx` (`Funcionario_idFuncionario`),
-  KEY `fk_Serviço_TipoServico1_idx` (`TipoServico_idTipoServico`),
-  KEY `fk_Serviço_Anima1_idx` (`Anima_idAnima`,`Anima_cliente_idcliente`),
-  KEY `fk_Serviço_Produto1_idx` (`Produto_idProduto`),
-  KEY `fk_Serviço_Pagamento1_idx` (`Pagamento_idFormaPagamento`),
-  CONSTRAINT `fk_Serviço_Anima1` FOREIGN KEY (`Anima_idAnima`, `Anima_cliente_idcliente`) REFERENCES `Animal` (`idAnimal`, `cliente_idcliente`),
-  CONSTRAINT `fk_Serviço_Funcionario1` FOREIGN KEY (`Funcionario_idFuncionario`) REFERENCES `Funcionario` (`idFuncionario`),
-  CONSTRAINT `fk_Serviço_Pagamento1` FOREIGN KEY (`Pagamento_idFormaPagamento`) REFERENCES `Pagamento` (`idFormaPagamento`),
-  CONSTRAINT `fk_Serviço_Produto1` FOREIGN KEY (`Produto_idProduto`) REFERENCES `Produto` (`idProduto`),
-  CONSTRAINT `fk_Serviço_TipoServico1` FOREIGN KEY (`TipoServico_idTipoServico`) REFERENCES `TipoServico` (`idTipoServico`)
+  PRIMARY KEY (`idServico`,`Pagamento_idFormaPagamento`),
+  KEY `fk_Servico_Funcionario1_idx` (`Funcionario_idFuncionario`),
+  KEY `fk_Servico_TipoServico1_idx` (`TipoServico_idTipoServico`),
+  KEY `fk_Servico_Anima1_idx` (`Anima_idAnima`,`Anima_cliente_idcliente`),
+  KEY `fk_Servico_Produto1_idx` (`Produto_idProduto`),
+  KEY `fk_Servico_Pagamento1_idx` (`Pagamento_idFormaPagamento`),
+  CONSTRAINT `fk_Servico_Anima1` FOREIGN KEY (`Anima_idAnima`, `Anima_cliente_idcliente`) REFERENCES `Animal` (`idAnimal`, `cliente_idcliente`),
+  CONSTRAINT `fk_Servico_Funcionario1` FOREIGN KEY (`Funcionario_idFuncionario`) REFERENCES `Funcionario` (`idFuncionario`),
+  CONSTRAINT `fk_Servico_Pagamento1` FOREIGN KEY (`Pagamento_idFormaPagamento`) REFERENCES `Pagamento` (`idFormaPagamento`),
+  CONSTRAINT `fk_Servico_Produto1` FOREIGN KEY (`Produto_idProduto`) REFERENCES `Produto` (`idProduto`),
+  CONSTRAINT `fk_Servico_TipoServico1` FOREIGN KEY (`TipoServico_idTipoServico`) REFERENCES `TipoServico` (`idTipoServico`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -275,7 +275,7 @@ CREATE TABLE `TipoPagamento` (
 
 LOCK TABLES `TipoPagamento` WRITE;
 /*!40000 ALTER TABLE `TipoPagamento` DISABLE KEYS */;
-INSERT INTO `TipoPagamento` VALUES (1,'Dinheiro'),(2,'Cartão'),(3,'Boleto');
+INSERT INTO `TipoPagamento` VALUES (1,'Dinheiro'),(2,'Cartao'),(3,'Boleto');
 /*!40000 ALTER TABLE `TipoPagamento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -324,7 +324,7 @@ CREATE TABLE `Usuario` (
 
 LOCK TABLES `Usuario` WRITE;
 /*!40000 ALTER TABLE `Usuario` DISABLE KEYS */;
-INSERT INTO `Usuario` (`login`, `senha`) VALUES ('admin', 'cachorro123');
+INSERT INTO `Usuario` (`login`, `senha`) VALUES ('admin', 'senha');
 /*!40000 ALTER TABLE `Usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
