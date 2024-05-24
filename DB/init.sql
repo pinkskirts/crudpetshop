@@ -324,7 +324,7 @@ CREATE TABLE `Usuario` (
 
 LOCK TABLES `Usuario` WRITE;
 /*!40000 ALTER TABLE `Usuario` DISABLE KEYS */;
-INSERT INTO `Usuario` (`login`, `senha`) VALUES ('admin', 'senha');
+INSERT INTO `Usuario` (`login`, `senha`) VALUES ('admin', 'petshop');
 /*!40000 ALTER TABLE `Usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
