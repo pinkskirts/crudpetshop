@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 
 	"fyne.io/fyne/v2"
@@ -298,30 +299,33 @@ func newAnimalInputWindow(app fyne.App, cliente int) {
 	window.Show()
 }
 
-func newShowAnimaisWindow(app fyne.App) { // todo: mudar output de read Animal para aparecer os campos de texto ao inves de ID, fazer JOIN
+// todo: mudar output de read Animal para aparecer os campos de texto ao inves de ID, fazer JOIN
+func newShowAnimaisWindow(app fyne.App) {
 	window := app.NewWindow("ANIMAIS DISPONIVEIS")
 	window.Resize(fyne.NewSize(400, 300))
 
-	content := container.NewVBox()
-
 	Animais, _ := crud.READAnimal()
 
-	for _, animal := range Animais {
-		content.Add(widget.NewLabel("ID: " + strconv.Itoa(animal.ID)))
-		content.Add(widget.NewLabel("Nome: " + animal.Nome))
-		content.Add(widget.NewLabel("Porte: " + strconv.Itoa(animal.Porte)))
-		content.Add(widget.NewLabel("Raca: " + strconv.Itoa(animal.Raca)))
-		content.Add(widget.NewLabel("Cliente: " + strconv.Itoa(animal.Cliente)))
-		content.Add(widget.NewLabel("___________________________________"))
+	accordion := widget.NewAccordion()
 
+	for _, animal := range Animais {
+		item := widget.NewAccordionItem(
+			animal.Nome,
+			container.NewVBox(
+				widget.NewLabel(fmt.Sprintf("ID: %d", animal.ID)),
+				widget.NewLabel(fmt.Sprintf("Porte: %d", animal.Porte)),
+				widget.NewLabel(fmt.Sprintf("Raca: %d", animal.Raca)),
+				widget.NewLabel(fmt.Sprintf("Cliente: %d", animal.Cliente)),
+			),
+		)
+		accordion.Append(item)
 	}
 
-	content.Add(widget.NewButton("Voltar", func() {
+	content := container.NewVBox(accordion, widget.NewButton("Voltar", func() {
 		window.Close()
 	}))
 
 	window.SetContent(content)
-
 	window.Show()
 }
 
@@ -521,23 +525,28 @@ func newShowClientesWindow(app fyne.App) {
 	window := app.NewWindow("CLIENTES DISPONIVEIS")
 	window.Resize(fyne.NewSize(400, 300))
 
-	content := container.NewVBox()
-
 	Clientes, _ := crud.READCliente()
 
+	accordion := widget.NewAccordion()
+
 	for _, cliente := range Clientes {
-		content.Add(widget.NewLabel("ID: " + strconv.Itoa(cliente.ID)))
-		content.Add(widget.NewLabel("Nome: " + cliente.Nome))
-		content.Add(widget.NewLabel("CPF: " + cliente.CPF))
-		content.Add(widget.NewLabel("___________________________________"))
+		details := container.NewVBox(
+			widget.NewLabel(fmt.Sprintf("ID: %d", cliente.ID)),
+			widget.NewLabel(fmt.Sprintf("Nome: %s", cliente.Nome)),
+			widget.NewLabel(fmt.Sprintf("CPF: %s", cliente.CPF)),
+		)
+		item := widget.NewAccordionItem(cliente.Nome, details)
+		accordion.Append(item)
 	}
 
-	content.Add(widget.NewButton("Voltar", func() {
-		window.Close()
-	}))
+	content := container.NewVBox(
+		accordion,
+		widget.NewButton("Voltar", func() {
+			window.Close()
+		}),
+	)
 
 	window.SetContent(content)
-
 	window.Show()
 }
 
@@ -601,26 +610,28 @@ func newShowFuncionariosWindow(app fyne.App) {
 	window := app.NewWindow("FUNCIONARIOS DISPONIVEIS")
 	window.Resize(fyne.NewSize(400, 300))
 
-	content := container.NewVBox()
+	funcionarios, _ := crud.READFuncionario()
 
-	funcionarios, err := crud.READFuncionario()
-	if err != nil {
-		panic(err)
-	}
+	accordion := widget.NewAccordion()
 
 	for _, funcionario := range funcionarios {
-		content.Add(widget.NewLabel("ID: " + strconv.Itoa(funcionario.ID)))
-		content.Add(widget.NewLabel("Nome: " + funcionario.Nome))
-		content.Add(widget.NewLabel("CPF: " + funcionario.CPF))
-		content.Add(widget.NewLabel("___________________________________"))
+		details := container.NewVBox(
+			widget.NewLabel(fmt.Sprintf("ID: %d", funcionario.ID)),
+			widget.NewLabel(fmt.Sprintf("Nome: %s", funcionario.Nome)),
+			widget.NewLabel(fmt.Sprintf("CPF: %s", funcionario.CPF)),
+		)
+		item := widget.NewAccordionItem(funcionario.Nome, details)
+		accordion.Append(item)
 	}
 
-	content.Add(widget.NewButton("Voltar", func() {
-		window.Close()
-	}))
+	content := container.NewVBox(
+		accordion,
+		widget.NewButton("Voltar", func() {
+			window.Close()
+		}),
+	)
 
 	window.SetContent(content)
-
 	window.Show()
 }
 
@@ -688,23 +699,28 @@ func newShowPagamentosWindow(app fyne.App) {
 	window := app.NewWindow("PAGAMENTOS DISPONIVEIS")
 	window.Resize(fyne.NewSize(400, 300))
 
-	content := container.NewVBox()
-
 	Pagamentos, _ := crud.READPagamento()
 
-	for _, pagamento := range Pagamentos { // refatorar nas outras funcoes de show
-		content.Add(widget.NewLabel("ID: " + strconv.Itoa(pagamento.ID)))
-		content.Add(widget.NewLabel("Tipo: " + strconv.Itoa(pagamento.Tipo))) // todo: pegar tipo via nome
-		content.Add(widget.NewLabel("Data de emissão: " + pagamento.Data))
-		content.Add(widget.NewLabel("___________________________________"))
+	accordion := widget.NewAccordion()
+
+	for _, pagamento := range Pagamentos {
+		details := container.NewVBox(
+			widget.NewLabel(fmt.Sprintf("ID: %d", pagamento.ID)),
+			widget.NewLabel(fmt.Sprintf("Tipo: %d", pagamento.Tipo)),
+			widget.NewLabel(fmt.Sprintf("Data de emissão: %s", pagamento.Data)),
+		)
+		item := widget.NewAccordionItem(fmt.Sprintf("Pagamento ID: %d", pagamento.ID), details)
+		accordion.Append(item)
 	}
 
-	content.Add(widget.NewButton("Voltar", func() {
-		window.Close()
-	}))
+	content := container.NewVBox(
+		accordion,
+		widget.NewButton("Voltar", func() {
+			window.Close()
+		}),
+	)
 
 	window.SetContent(content)
-
 	window.Show()
 }
 
@@ -920,28 +936,33 @@ func newShowServicosWindow(app fyne.App) {
 	window := app.NewWindow("SERVICOS REALIZADOS")
 	window.Resize(fyne.NewSize(400, 300))
 
-	content := container.NewVBox()
-
 	Servicos, _ := crud.READServico()
 
+	accordion := widget.NewAccordion()
+
 	for _, servico := range Servicos {
-		content.Add(widget.NewLabel("ID: " + strconv.Itoa(servico.ID)))
-		content.Add(widget.NewLabel("Funcionario: " + strconv.Itoa(servico.IDFuncionario)))
-		content.Add(widget.NewLabel("Data: " + servico.Data))
-		content.Add(widget.NewLabel("Tipo de serviço: " + strconv.Itoa(servico.Tipo)))
-		content.Add(widget.NewLabel("Animal: " + strconv.Itoa(servico.IDAnimal)))
-		content.Add(widget.NewLabel("ID do Cliente: " + strconv.Itoa(servico.IDClienteAnimal)))
-		content.Add(widget.NewLabel("ID do Produto: " + strconv.Itoa(servico.IDProduto)))
-		content.Add(widget.NewLabel("ID Forma de pagamento: " + strconv.Itoa(servico.IDFormaPagamento)))
-		content.Add(widget.NewLabel("___________________________________"))
+		details := container.NewVBox(
+			widget.NewLabel(fmt.Sprintf("ID: %d", servico.ID)),
+			widget.NewLabel(fmt.Sprintf("Funcionario: %d", servico.IDFuncionario)),
+			widget.NewLabel(fmt.Sprintf("Data: %s", servico.Data)),
+			widget.NewLabel(fmt.Sprintf("Tipo de serviço: %d", servico.Tipo)),
+			widget.NewLabel(fmt.Sprintf("Animal: %d", servico.IDAnimal)),
+			widget.NewLabel(fmt.Sprintf("ID do Cliente: %d", servico.IDClienteAnimal)),
+			widget.NewLabel(fmt.Sprintf("ID do Produto: %d", servico.IDProduto)),
+			widget.NewLabel(fmt.Sprintf("ID Forma de pagamento: %d", servico.IDFormaPagamento)),
+		)
+		item := widget.NewAccordionItem(fmt.Sprintf("Serviço ID: %d", servico.ID), details)
+		accordion.Append(item)
 	}
 
-	content.Add(widget.NewButton("Voltar", func() {
-		window.Close()
-	}))
+	content := container.NewVBox(
+		accordion,
+		widget.NewButton("Voltar", func() {
+			window.Close()
+		}),
+	)
 
 	window.SetContent(content)
-
 	window.Show()
 }
 
