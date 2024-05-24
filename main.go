@@ -27,35 +27,39 @@ func main() {
 	window := petshopApp.NewWindow("LOGIN")
 	window.Resize(fyne.NewSize(400, 300))
 
-	content := container.NewVBox()
-
 	loginEntry := widget.NewEntry()
-	senhaEntry := widget.NewEntry()
-
-	content.Add(widget.NewLabel("Entre com seu login e senha:"))
-	content.Add(widget.NewLabel("Login:"))
-	content.Add(loginEntry)
-
-	content.Add(widget.NewLabel("Senha:"))
-	content.Add(senhaEntry)
+	loginEntry.SetPlaceHolder("Login")
+	senhaEntry := widget.NewPasswordEntry()
+	senhaEntry.SetPlaceHolder("Senha")
 
 	errorMessage := widget.NewLabel("")
-	
-	content.Add(errorMessage)
 
-	content.Add(widget.NewButton("Enter", func() {
-		// checar login e senha no bd
-		if !queryUser(loginEntry.Text, senhaEntry.Text) {
-			errorMessage.SetText("Usuário não encontrado.")
-		} else {
-			errorMessage.SetText("")
-			newTablesWindow(petshopApp)
-		}
-	}))
+	form := &widget.Form{
+		Items: []*widget.FormItem{
+			{Text: "Login", Widget: loginEntry},
+			{Text: "Senha", Widget: senhaEntry},
+		},
+		OnSubmit: func() {
+			// checar login e senha no bd
+			if !queryUser(loginEntry.Text, senhaEntry.Text) {
+				errorMessage.SetText("Usuário não encontrado.")
+			} else {
+				errorMessage.SetText("")
+				newTablesWindow(petshopApp)
+			}
+		},
+		OnCancel: func() {
+			petshopApp.Quit()
+		},
+		SubmitText: "Enter",
+		CancelText: "Sair",
+	}
 
-	content.Add(widget.NewButton("Sair", func() {
-		petshopApp.Quit()
-	}))
+	content := container.NewVBox(
+		widget.NewLabel("Entre com seu login e senha:"),
+		form,
+		errorMessage,
+	)
 
 	window.SetContent(content)
 	window.ShowAndRun()
