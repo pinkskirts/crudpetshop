@@ -30,7 +30,7 @@
    mysql -u username -p -h hostname -P port
    ```
 
-5. Executar script de inicialização do Banco de Dados padrão do projeto - database petshop
+5. Execute o script de inicialização do Banco de Dados padrão do projeto - database petshop
    ```
    source ./script.sql
    ```
