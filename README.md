@@ -4,8 +4,6 @@
 - Sistema operacional baseado em Unix
 - Instância do MySQL Client em execução
 - Go (Golang) versão 1.22.3 ou superior
-- fyne.io/fyne/v2 v2.4.5
-- go-sql-driver/mysql v1.8.1
 - joho/godotenv v1.5.1
 
 ## Instalação
